@@ -10,11 +10,11 @@ interface IproductResponse {
 }
 
 interface CartState {
-  length: any;
   data: IproductResponse[];
   loading: boolean;
   error: string | null;
 }
+
 
 export const fetchCart = createAsyncThunk<
   IproductResponse[],
@@ -35,10 +35,10 @@ export const fetchCart = createAsyncThunk<
 
 const initialState: CartState = {
   data: [],
-  length,
   loading: false,
   error: null,
 };
+
 
 // Cart slice
 const cartSlice = createSlice({

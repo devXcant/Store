@@ -8,7 +8,9 @@ interface PropType {
 }
 
 const Navbar = ({ setShowCart }: PropType) => {
-  const cartCount = useAppSelector((state) => state.fetchCart.length);
+  // Accessing the cart count by getting the length of the data array
+  const cartCount = useAppSelector((state) => state.fetchCart.data.length);
+
   return (
     <div className="pt-4 bg-white top-0 sticky">
       <div className="container">
@@ -42,14 +44,12 @@ const Navbar = ({ setShowCart }: PropType) => {
             >
               <AiOutlineShoppingCart />
               <div className="absolute top-[-2px] right-[-3px] bg-red-600 w-[20px] h-[20px] rounded-full text-white text-[14px] grid place-items-center">
-                {cartCount}
+                {cartCount}  {/* Displaying cart count */}
               </div>
             </div>
           </div>
-              </div>
-              <div className="border-b border-gray-200 pt-4">
-
-              </div>
+        </div>
+        <div className="border-b border-gray-200 pt-4"></div>
       </div>
     </div>
   );
