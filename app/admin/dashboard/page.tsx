@@ -96,24 +96,24 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="bg-white h-[calc(100vh-96px)] rounded-lg p-4">
-      <h2 className="text-3xl font-semibold mb-4">All Products</h2>
+    <div className="bg-black bg-opacity-60 backdrop-blur-md h-[calc(100vh-96px)] rounded-lg p-6 shadow-lg">
+      <h2 className="text-3xl font-semibold text-white mb-6">All Products</h2>
       <button
         onClick={postProducts}
-        className="bg-blue-500 text-white py-2 px-4 rounded mb-4 hover:bg-blue-600"
+        className=" bg-gradient-to-r from-green-500 to-green-700 text-white py-2 px-6 rounded-lg mb-4 hover:bg-green-700 transition-all"
       >
         Post Products
       </button>
 
       <div className="mt-4 h-[calc(100vh-180px)] overflow-y-auto">
-        <table className="w-full table-auto border-collapse">
+        <table className="w-full table-auto border-collapse text-white">
           <thead>
-            <tr className="text-gray-500 border-t border-[#ececec]">
-              <th className="py-2 px-4">SR NO.</th>
-              <th className="py-2 px-4">Name</th>
-              <th className="py-2 px-4">Price</th>
-              <th className="py-2 px-4">Picture</th>
-              <th className="py-2 px-4">Actions</th>
+            <tr className="text-gray-500 border-t border-[#ececec] bg-[#121212]">
+              <th className="py-4 px-6">SR NO.</th>
+              <th className="py-4 px-6">Name</th>
+              <th className="py-4 px-6">Price</th>
+              <th className="py-4 px-6">Picture</th>
+              <th className="py-4 px-6">Actions</th>
             </tr>
           </thead>
           <tbody>

@@ -42,10 +42,10 @@ const menus = [
 const Sidebar = () => {
   const pathName = usePathname();
   return (
-    <div className="bg-white w-[300px] min-h-sreen p-4 shrink-0">
+    <div className="bg-black border-[#D2EAC5] border-r border-b rounded-[10px] w-[300px] min-h-sreen p-4 shrink-0 font-urbanist">
       <div className="flex items-center gap-4">
         <img src="/logo.jpg" alt="logo" className="size-12 rounded-lg" />
-        <h2 className="text-[20px] font-semibold">Ayo'r Store</h2>
+        <h2 className="text-[20px] leading-[40px] font-bold font-urbanist">Admin Panel</h2>
       </div>
 
       <ul className="space-y-4 mt-6">
@@ -53,12 +53,12 @@ const Sidebar = () => {
           <Link
             key={menu.title}
             href={menu.href}
-            className={`flex gap-2 items-center p-4 rounded-lg cursor-pointer hover:bg-pink hover:text-white ${
-              pathName === menu.href ? "bg-pink text-white" : "bg-gray-200"
+            className={`flex gap-2 items-center p-4 rounded-lg cursor-pointer hover:bg-gradient-to-r hover:from-green-200 hover:to-green-500 hover:text-white ${
+              pathName === menu.href ? "bg-gradient-to-r from-green-500 to-green-700 text-white" : "bg-gblack border"
             }`}
           >
             <div className="text-[20px]">{menu.icon}</div>
-            <div className="text-[10px]">{menu.title}</div>
+            <div className="text-[15px]">{menu.title}</div>
           </Link>
         ))}
       </ul>

@@ -4,7 +4,6 @@ import { setLoading } from "@/redux/features/loadingReducer";
 import { setProduct } from "@/redux/features/product";
 import { makeToast } from "@/utils/helper";
 import axios from "axios";
-import { log } from "console";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction } from "react";
 import { CiEdit } from "react-icons/ci";
@@ -32,19 +31,14 @@ const ProductRow = ({
 
   const onDelete = () => {
     dispatch(setLoading(true));
-    const payload = {
-      fileKey: product.fileKey,
-    };
+    const payload = { fileKey: product.fileKey };
 
     axios
       .delete("/api/uploadthing", { data: payload })
-      .then((res) => {
-        console.log("res.data");
-
+      .then(() => {
         axios
           .delete(`http://localhost:3000/api/delete_product/${product._id}`)
-          .then((res) => {
-            console.log(res.data);
+          .then(() => {
             makeToast("Product deleted successfully");
             setUpdateTable((prevState) => !prevState);
           })
@@ -55,28 +49,28 @@ const ProductRow = ({
   };
 
   return (
-    <tr className="border-b border-[#ececec]">
-      <td className="py-2 px-4 text-center">{srNo}</td>
-      <td className="py-2 px-4">{product.name}</td>
-      <td className="py-2 px-4 text-center">$ {product.price}</td>
-      <td className="py-2 px-4 text-center">
+    <tr className="border-b border-[#ececec] font-urbanist bg-opacity-50 backdrop-blur-md hover:bg-[#121212]">
+      <td className="py-4 px-6 text-center text-gray-300">{srNo}</td>
+      <td className="py-4 px-6 text-gray-300">{product.name}</td>
+      <td className="py-4 px-6 text-center text-gray-300">$ {product.price}</td>
+      <td className="py-4 px-6 text-center">
         <Image
           src={product.imgSrc}
           width={40}
           height={40}
           alt="product_image"
-          className="rounded"
+          className="rounded-md shadow-md"
         />
       </td>
-      <td className="py-2 px-4 text-center">
-        <div className="flex items-center justify-center gap-2 text-gray-600">
+      <td className="py-4 px-6 text-center">
+        <div className="flex items-center justify-center gap-4 text-gray-400">
           <CiEdit
             onClick={onEdit}
-            className="cursor-pointer hover:text-black"
+            className="cursor-pointer hover:text-green-500 transition-all duration-300"
           />
           <RiDeleteBin6Line
             onClick={onDelete}
-            className="cursor-pointer hover:text-red-600"
+            className="cursor-pointer hover:text-red-500 transition-all duration-300"
           />
         </div>
       </td>
