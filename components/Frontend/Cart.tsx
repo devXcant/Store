@@ -8,12 +8,12 @@ interface PropType {
   setShowCart: Dispatch<SetStateAction<boolean>>;
 }
 interface IproductResponse {
-    id: string;
-    title: string;
-    img: string;
-    price: number;
-    quantity: number;
-  }
+  id: string;
+  title: string;
+  img: string;
+  price: number;
+  quantity: number;
+}
 
 const Cart = ({ setShowCart }: PropType) => {
   // Access the data from the fetchCart slice
@@ -29,16 +29,18 @@ const Cart = ({ setShowCart }: PropType) => {
   };
 
   return (
-    <div className="bg-[#0000007d] w-full min-h-screen fixed left-0 top-0 z-20 overflow-y-scroll">
-      <div className="max-w-[400px] w-full min-h-full bg-white absolute right-0 top-0 p-6">
+    <div className="bg-black bg-opacity-50 w-full min-h-screen fixed left-0 top-0 z-20 overflow-y-auto backdrop-blur-sm font-urbanist">
+      <div className="max-w-[400px] w-full min-h-full bg-white absolute right-0 top-0 p-8 rounded-lg shadow-lg">
+        {/* Close Button */}
         <RxCross1
-          className="absolute right-0 top-0 m-6 text-[24px] cursor-pointer"
+          className="absolute right-4 top-4 text-2xl cursor-pointer text-gray-700 hover:text-gray-900"
           onClick={() => setShowCart(false)}
         />
-        <h3 className="pt-6 text-lg font-medium text-gray-600 uppercase">
-          Your Cart
-        </h3>
-        <div className="mt-6 space-y-2">
+
+        <h3 className="pt-6 text-2xl font-semibold text-gray-800">Your Cart</h3>
+
+        {/* Cart Items */}
+        <div className="mt-6 space-y-4">
           {products?.map((item: IproductResponse) => {
             return (
               <CartProduct
@@ -52,16 +54,22 @@ const Cart = ({ setShowCart }: PropType) => {
             );
           })}
         </div>
-        <div className="flex justify-between items-center font-medium text-xl py-4">
+
+        {/* Total Price */}
+        <div className="flex justify-between items-center font-medium text-xl py-4 mt-6 border-t border-gray-300">
           <p>Total:</p>
           <p>${getTotal()}.00</p>
         </div>
-        <button className="bg-black text-white text-center w-full rounded-3xl py-2 hover:bg-accent mb-4 mt-4">
-          View Cart
-        </button>
-        <button className="bg-black text-white text-center w-full rounded-3xl py-2 hover:bg-accent mb-4 mt-4">
-          Checkout
-        </button>
+
+        {/* Action Buttons */}
+        <div className="space-y-4 mt-6">
+          <button className="bg-black text-white text-center w-full rounded-3xl py-3 hover:bg-gray-800 transition-all">
+            View Cart
+          </button>
+          <button className="bg-black text-white text-center w-full rounded-3xl py-3 hover:bg-gray-800 transition-all">
+            Checkout
+          </button>
+        </div>
       </div>
     </div>
   );

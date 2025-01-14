@@ -130,9 +130,9 @@ const Dashboard = () => {
         </table>
       </div>
 
-      {openPopup && (
+      {/* {openPopup && (
         <Popup setOpenPopup={setOpenPopup} setUpdateTable={setUpdateTable} />
-      )}
+      )} */}
     </div>
   );
 };

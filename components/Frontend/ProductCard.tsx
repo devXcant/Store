@@ -2,22 +2,20 @@ import { useAppDispatch } from "@/lib/hook";
 import { addToCart } from "@/redux/features/cart";
 import { makeToast } from "@/utils/helper";
 import React from "react";
-import toast from "react-hot-toast";
-import {
-  AiFillStar,
-  AiOutlineShoppingCart,
-  AiOutlineStar,
-} from "react-icons/ai";
+import { AiFillStar, AiOutlineShoppingCart, AiOutlineStar } from "react-icons/ai";
+
 interface propsType {
   id: string;
   img: string;
   category: string;
   title: string;
   price: number;
+  isLoading: boolean; // New prop to indicate loading state
 }
 
-const ProductCard = ({ id, img, category, title, price }: propsType) => {
+const ProductCard = ({ id, img, category, title, price, isLoading }: propsType) => {
   const dispatch = useAppDispatch();
+
   const addProductToCart = () => {
     const payload = {
       id,
@@ -29,30 +27,57 @@ const ProductCard = ({ id, img, category, title, price }: propsType) => {
     dispatch(addToCart(payload));
     makeToast("Added to cart");
   };
-  return (
-    <div className="border border-gray-200">
-      <div className="text-center border-b border-gray-200">
-        <img src={img} alt={img} className="inline-block" />
-      </div>
-      <div className="px-8 py-4">
-        <p className="text-gray-500 text-[14px]">{category}</p>
-        <h2 className="font-medium">{title}</h2>
 
-        <div className="mt-3 flex text-[#FFB21D] items-center">
-          <AiFillStar />
-          <AiFillStar />
-          <AiFillStar />
-          <AiFillStar />
+  return (
+    <div
+      className={`${
+        isLoading ? "animate-pulse" : ""
+      } rounded-xl  shadow-lg bg-black border font-urbanist transition-all duration-300 mb-10`}
+    >
+      {/* Image Section */}
+      <div className="relative overflow-hidden rounded-t-lg">
+        <img
+          src={isLoading ? "/loading-image-placeholder.jpg" : img} // Use a placeholder image while loading
+          alt={title}
+          className="w-90%  h-[200px] object-cover transition-transform transform hover:scale-105"
+        />
+      </div>
+
+      {/* Product Info Section */}
+      <div className="px-6 py-4 border-t border-grey-100">
+        {/* Category */}
+        <p className="text-sm text-[#00A1AB]">{category}</p>
+
+        {/* Title */}
+        <h2 className="font-semibold text-[#020112] mt-1">{isLoading ? "Loading..." : title}</h2>
+
+        {/* Ratings */}
+        <div className="mt-2 flex items-center text-[#FFB21D]">
+          {isLoading
+            ? Array(4)
+                .fill(0)
+                .map((_, index) => <AiFillStar key={index} className="animate-pulse" />)
+            : Array(4)
+                .fill(0)
+                .map((_, index) => <AiFillStar key={index} />)}
           <AiOutlineStar />
-          <p className="text-gray-600 text-[14px] ml-2">(3 Review)</p>
+          <p className="text-gray-600 text-xs ml-2">{isLoading ? "(Loading...)" : "(3 Reviews)"}</p>
         </div>
-        <div className="flex justify-between items-center mmt-4">
-          <h2 className="font-medium text-accent text-xl">${price}</h2>
+
+        {/* Price and Add to Cart Button */}
+        <div className="flex justify-between items-center mt-4">
+          <h2 className="font-medium text-[#020112] text-xl">{isLoading ? "$..." : `$${price}`}</h2>
+
+          {/* Add to Cart Button */}
           <div
-            className="flex gap-2 items-center bg-pink text-white px-4 py-2 cursor-pointer hover:bg-accent"
-            onClick={addProductToCart}
+            className={`flex gap-2 items-center ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-600 to-purple-800 text-white cursor-pointer hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 transition-all duration-300"
+            } px-4 py-2 rounded-md `}
+            onClick={!isLoading ? addProductToCart : undefined} // Disable click during loading
           >
-            <AiOutlineShoppingCart /> Add to Cart
+            <AiOutlineShoppingCart /> {isLoading ? "Loading..." : "Add to Cart"}
           </div>
         </div>
       </div>
