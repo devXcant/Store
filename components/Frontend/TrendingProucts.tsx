@@ -53,8 +53,7 @@ const TrendingProducts = () => {
               img={item.imgSrc}
               category={item.category}
               price={item.price}
-              title={item.title}
-            />
+              title={item.title} isLoading={false}            />
           ))}
       </div>
     </div>

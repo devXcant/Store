@@ -37,7 +37,7 @@ const ProductCard = ({ id, img, category, title, price, isLoading }: propsType) 
       {/* Image Section */}
       <div className="relative overflow-hidden rounded-t-lg">
         <img
-          src={isLoading ? "/loading-image-placeholder.jpg" : img} // Use a placeholder image while loading
+          src={isLoading ? "/cartplaceholder.jpg" : img}
           alt={title}
           className="w-90%  h-[200px] object-cover transition-transform transform hover:scale-105"
         />
