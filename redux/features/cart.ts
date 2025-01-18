@@ -15,7 +15,6 @@ interface CartState {
   error: string | null;
 }
 
-
 export const fetchCart = createAsyncThunk<
   IproductResponse[],
   void,
@@ -39,7 +38,6 @@ const initialState: CartState = {
   error: null,
 };
 
-
 // Cart slice
 const cartSlice = createSlice({
   name: "cart",
@@ -57,6 +55,15 @@ const cartSlice = createSlice({
     },
     removeFromCart: (state, action: PayloadAction<string>) => {
       state.data = state.data.filter((item) => item.id !== action.payload);
+    },
+    updateCartQuantity: (
+      state,
+      action: PayloadAction<{ id: string; quantity: number }>
+    ) => {
+      const item = state.data.find((product) => product.id === action.payload.id);
+      if (item) {
+        item.quantity = action.payload.quantity; // Update the quantity
+      }
     },
   },
   extraReducers: (builder) => {
@@ -79,7 +86,6 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateCartQuantity } = cartSlice.actions;
 
 export default cartSlice.reducer;
-
