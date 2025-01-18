@@ -53,16 +53,21 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
     });
   };
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-2 rounded-md">
-      {clientSecret && <PaymentElement />}
-      {errorMessage && <div>{errorMessage}</div>}
-      <button
-        className="text-white w-full p-5 bg-black mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse"
-        disabled={!stripe || loading}
+    <div className="flex justify-center items-center transform translate-x-1/6 translate-y-1/2">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-2 rounded-md w-[500px] "
       >
-        {!loading ? `Pay ${amount}` : `Processing...`}{" "}
-      </button>
-    </form>
+        {clientSecret && <PaymentElement />}
+        {errorMessage && <div>{errorMessage}</div>}
+        <button
+          className="text-white w-full p-5 bg-black mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse"
+          disabled={!stripe || loading}
+        >
+          {!loading ? `Pay ${amount}` : `Processing...`}{" "}
+        </button>
+      </form>
+    </div>
   );
 };
 

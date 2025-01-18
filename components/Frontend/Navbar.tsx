@@ -12,7 +12,7 @@ const Navbar = ({ setShowCart }: PropType) => {
   const cartCount = useAppSelector((state) => state.fetchCart.data.length);
 
   return (
-    <div className="pt-4 bg-gray-900 text-white shadow-lg sticky top-0 z-50">
+    <div className="pt-4 bg-gray-900 text-white shadow-lg sticky top-0 z-10">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
