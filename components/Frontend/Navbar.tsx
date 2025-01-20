@@ -1,4 +1,5 @@
 import { useAppSelector } from "@/lib/hook";
+import { getToken } from "@/utils/token";
 import React, { Dispatch, SetStateAction } from "react";
 import { AiOutlineShoppingCart, AiOutlineUser } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
@@ -10,14 +11,20 @@ interface PropType {
 const Navbar = ({ setShowCart }: PropType) => {
   // Accessing the cart count by getting the length of the data array
   const cartCount = useAppSelector((state) => state.fetchCart.data.length);
+  const token = getToken()
+  if (!token) {
+
+  }
+
+  // const [loggedIn, setLoggedIn] = React.useState(false);
 
   return (
     <div className="pt-4 bg-gray-900 text-white shadow-lg sticky top-0 z-10">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <div className="text-3xl font-bold text-gradient bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
-            LOGO
+          <div className="text-xl font-bold text-gradient bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text font-bebas leading-[22px]">
+            DEVX's STORE
           </div>
 
           {/* Search Bar */}

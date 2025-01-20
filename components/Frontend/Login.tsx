@@ -1,78 +1,170 @@
 "use client";
-import axios from "axios";
-import React, { useState } from "react";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FcGoogle } from "react-icons/fc";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+export default function LoginUI() {
+  const router = useRouter();
+  const [formType, setFormType] = useState<"login" | "signup">("login");
+  const [formData, setFormData] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    number: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setLoading(true);
-    setError(null);
-    setSuccessMessage(null);
-
-    const payload = {
-      email,
-    };
-
     try {
-      const response = await axios.post("http://localhost:3001/api/login_user", payload, {
+      const response = await fetch("http://localhost:3000/api/login_user", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(formData),
       });
 
-      if (response.status === 200) {
-        setSuccessMessage("Login successful");
-        console.log("Login successful", response.data);
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Login successful", data);
+        router.push(`/`);
+        localStorage.setItem("authToken", data.token);
       } else {
-        setError("Login failed. Please try again.");
-        console.log("Login failed", response.data);
+        console.error("Login failed:", data.message || "An error occurred");
       }
-    } catch (err: any) {
-      setError("An error occurred. Please try again later.");
-      console.error("Error logging in:", err);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
     }
   };
 
   return (
-    <div className="container mx-auto mt-16 px-4 md:px-8">
-      <form onSubmit={handleLogin} className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+    <div className="flex items-center justify-center min-h-screen bg-background font-urbanist">
+      <Card className="w-[400px] bg-card text-card-foreground">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl text-foreground">
+            {formType === "login" ? "Sign In" : "Sign Up"}
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
+            {formType === "login"
+              ? "Enter your email to sign in to your account"
+              : "Fill in the details below to create an account"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <Button
+            variant="outline"
+            onClick={() => signIn("google")}
+            className="bg-muted text-foreground hover:bg-primary hover:text-primary-foreground"
+          >
+            <FcGoogle className="mr-2 h-4 w-4" />
+            Continue with Google
+          </Button>
 
-        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-        {successMessage && <p className="text-green-500 text-sm mt-2">{successMessage}</p>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="email" className="text-sm">
+                Email
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
 
-        <button
-          type="submit"
-          className={`w-full py-2 bg-blue-500 text-white rounded-md mt-4 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+            {formType === "signup" && (
+              <>
+                <div>
+                  <Label htmlFor="firstName" className="text-sm">
+                    First Name
+                  </Label>
+                  <Input
+                    id="firstName"
+                    name="firstName"
+                    placeholder="Enter your first name"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lastName" className="text-sm">
+                    Last Name
+                  </Label>
+                  <Input
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Enter your last name"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="number" className="text-sm">
+                    Phone Number
+                  </Label>
+                  <Input
+                    id="number"
+                    name="number"
+                    type="tel"
+                    placeholder="Enter your phone number"
+                    value={formData.number}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              {formType === "login" ? "Sign In" : "Sign Up"}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter>
+          <p className="text-sm text-muted-foreground">
+            {formType === "login"
+              ? "Don't have an account?"
+              : "Already have an account?"}{" "}
+            <button
+              onClick={() =>
+                setFormType(formType === "login" ? "signup" : "login")
+              }
+              className="text-primary underline"
+            >
+              {formType === "login" ? "Sign Up" : "Sign In"}
+            </button>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
-};
-
-export default Login;
+}

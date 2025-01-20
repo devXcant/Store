@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { msg: "User not found. Create an account." },
+        { msg: "User not found. Create an account.", user },
         { status: 404 }
       );
     }
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { msg: "Login successful", token },
+      { msg: "Login successful", token, email: user.email },
       { status: 200 }
     );
   } catch (err: any) {

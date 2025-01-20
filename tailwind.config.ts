@@ -14,6 +14,7 @@ export default withUt({
 		fontFamily: {
 			urbanist: ['Urbanist', 'sans-serif'],
 			inconsolata: ['Inconsolata', 'monospace'],
+			bebas: ['Bebas Neue', 'serif'],
 		  },
   		colors: {
   			accent: {
