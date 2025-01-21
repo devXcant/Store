@@ -7,6 +7,7 @@ import {
 } from "@stripe/react-stripe-js";
 import convertToSubCurrency from "@/lib/convertsubcurrency";
 
+
 const CheckoutPage = ({ amount }: { amount: number }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -15,6 +16,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   console.log(clientSecret);
+
 
   useEffect(() => {
     fetch("/api/create-payment-intent", {

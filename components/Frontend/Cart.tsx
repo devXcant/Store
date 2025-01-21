@@ -1,8 +1,9 @@
 import { useAppSelector } from "@/lib/hook";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import CartProduct from "./CartProduct";
 import { useRouter } from "next/navigation";
+import { getToken } from "@/utils/token";
 
 // Make sure you pass the correct type for props
 interface PropType {
@@ -28,11 +29,18 @@ const Cart = ({ setShowCart }: PropType) => {
     });
     return total;
   };
+  const token = getToken();
 
   const handleCheckout = () => {
+    if (!token) {
+      router.push("/Login");
+    }
+
     const totalAmount = getTotal();
     router.push(`/checkout?totalAmount=${totalAmount}`);
   };
+
+  useEffect(() => {}, []);
 
   return (
     <div className="bg-black bg-opacity-50 w-full min-h-screen fixed left-0 top-0 z-50 overflow-y-auto backdrop-blur-sm font-urbanist">

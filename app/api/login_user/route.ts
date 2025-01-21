@@ -3,7 +3,12 @@ import User from "@/lib/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+// Ensure JWT_SECRET is properly set
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable is not defined.");
+}
 
 export async function POST(req: NextRequest) {
   try {

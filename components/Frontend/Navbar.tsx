@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/lib/hook";
 import { getToken } from "@/utils/token";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AiOutlineShoppingCart, AiOutlineUser } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
 
@@ -11,15 +11,25 @@ interface PropType {
 const Navbar = ({ setShowCart }: PropType) => {
   // Accessing the cart count by getting the length of the data array
   const cartCount = useAppSelector((state) => state.fetchCart.data.length);
-  const token = getToken()
-  if (!token) {
+  const [isLoggedin, setIsLoggedIn] = useState<boolean>(false);
+  const [user, setUser] = useState<string | null>(null);
 
-  }
+  useEffect(() => {
+    const token = getToken();
+    const storedUser = localStorage.getItem("user");
 
-  // const [loggedIn, setLoggedIn] = React.useState(false);
+
+    if (token) {
+      setIsLoggedIn(true);
+      setUser(storedUser);
+    } else {
+      setIsLoggedIn(false);
+      setUser(null);
+    }
+  }, []);
 
   return (
-    <div className="pt-4 bg-gray-900 text-white shadow-lg sticky top-0 z-10">
+    <div className="pt-4 bg-gray-900 text-white shadow-lg sticky top-0 z-10 font-urbanist">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
@@ -47,8 +57,16 @@ const Navbar = ({ setShowCart }: PropType) => {
                 <AiOutlineUser />
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Hello, Sign in</p>
-                <p className="font-medium text-sm text-white">Your Account</p>
+                {isLoggedin ? (
+                  <p className="text-gray-400 text-sm">Hello, {user}</p>
+                ) : (
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-gray-400 text-sm">Hello, Sign in</p>
+                    <p className="font-medium text-sm text-white">
+                      Your Account
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 

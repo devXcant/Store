@@ -35,7 +35,7 @@ export default function LoginUI() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/api/login_user", {
+      const response = await fetch("http://localhost:3002/api/login_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,6 +49,7 @@ export default function LoginUI() {
         console.log("Login successful", data);
         router.push(`/`);
         localStorage.setItem("authToken", data.token);
+        localStorage.setItem("user", data.email);
       } else {
         console.error("Login failed:", data.message || "An error occurred");
       }
