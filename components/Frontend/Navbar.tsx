@@ -13,18 +13,22 @@ const Navbar = ({ setShowCart }: PropType) => {
   const cartCount = useAppSelector((state) => state.fetchCart.data.length);
   const [isLoggedin, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<string | null>(null);
+  const [user2, setUser2] = useState<string | null>(null);
 
   useEffect(() => {
     const token = getToken();
     const storedUser = localStorage.getItem("user");
+    const storedUser2 = localStorage.getItem("user2");
 
 
     if (token) {
       setIsLoggedIn(true);
       setUser(storedUser);
+      setUser2(storedUser2);
     } else {
       setIsLoggedIn(false);
       setUser(null);
+      setUser2(null);
     }
   }, []);
 
@@ -58,7 +62,7 @@ const Navbar = ({ setShowCart }: PropType) => {
               </div>
               <div>
                 {isLoggedin ? (
-                  <p className="text-gray-400 text-sm">Hello, {user}</p>
+                  <p className="text-gray-400 text-sm">Hello, {user || user2}</p>
                 ) : (
                   <div className="flex flex-col items-center gap-2">
                     <p className="text-gray-400 text-sm">Hello, Sign in</p>

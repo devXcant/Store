@@ -76,7 +76,7 @@ export default function LoginUI() {
         console.log("Login successful", data);
         router.push(`/`);
         localStorage.setItem("authToken", data.token);
-        localStorage.setItem("user", data.email);
+        localStorage.setItem("user2", data.email);
       } else {
         console.error("Login failed:", data.message || "An error occurred");
       }
