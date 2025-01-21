@@ -33,10 +33,11 @@ const Cart = ({ setShowCart }: PropType) => {
   const handleCheckout = () => {
     if (!token) {
       router.push("/Login");
-    }
+    } else {
 
-    const totalAmount = getTotal();
-    router.push(`/checkout?totalAmount=${totalAmount}`);
+      const totalAmount = getTotal();
+      router.push(`/checkout?totalAmount=${totalAmount}`);
+    }
   };
 
   useEffect(() => {}, []);

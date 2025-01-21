@@ -30,7 +30,7 @@ const TrendingProducts = () => {
   }, []);
 
   return (
-    <div className="container mt-32 px-4 md:px-8">
+    <div className="container mt-32 px-4 md:px-8" id="Trending">
       {/* Title and Filter Section */}
       <div className="sm:flex justify-between items-center">
         <h2 className="text-sm font-medium uppercase font-urbanist bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">

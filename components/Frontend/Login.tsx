@@ -58,6 +58,33 @@ export default function LoginUI() {
     }
   };
 
+  const handleSubmit2 = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:3002/api/create_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Login successful", data);
+        router.push(`/`);
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("user", data.email);
+      } else {
+        console.error("Login failed:", data.message || "An error occurred");
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-background font-urbanist">
       <Card className="w-[400px] bg-card text-card-foreground">
@@ -81,7 +108,7 @@ export default function LoginUI() {
             Continue with Google
           </Button>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit2} className="space-y-4">
             <div>
               <Label htmlFor="email" className="text-sm">
                 Email

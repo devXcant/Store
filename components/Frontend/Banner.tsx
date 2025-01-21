@@ -1,47 +1,37 @@
-"use client";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 
-// Define the interface for the product type
-interface IProduct {
-  _id: string;
-  imgSrc: string;
-  fileKey: string;
-  name: string;
-  category: string;
-  title: string;
-  price: number;
-}
-
-const Banners = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
+const Banner = () => {
+  const [typedText, setTypedText] = useState('');
+  const message = "Welcome to DEVX's STORE";
 
   useEffect(() => {
-    axios
-      .get("/api/get_banner_products")
-      .then((res) => setProducts(res.data))
-      .catch((error) => console.error("Error fetching banner products:", error));
-  }, []);
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < message.length) {
+        setTypedText(message.substring(0, index + 1));
+        index++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 100);  // Adjust typing speed as needed
+
+    return () => clearInterval(interval);
+  }, [message]);
 
   return (
-    <div className="container mt-16 px-4 md:px-8">
-      <h2 className="text-sm font-medium uppercase font-urbanist bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">Banners</h2>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8">
-        {products.map((item) => (
-          <ProductCard
-            key={item._id}
-            id={item._id}
-            img={item.imgSrc}
-            category={item.category}
-            price={item.price}
-            title={item.title}
-            isLoading={false}
-          />
-        ))}
+    <div className=" text-white py-16 flex items-center justify-center font-urbanist">
+      <div className="text-center">
+        <h2 className="text-4xl font-bold mb-4">{typedText}</h2>
+        <p className="text-lg">Discover the best products crafted with elegance and style.</p>
+        <div  className="mt-2 px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500  text-white rounded-lg transition-all">
+          <Link href="#Trending">
+          Shop Now
+          </Link>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Banners;
+export default Banner;

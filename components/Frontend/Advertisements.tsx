@@ -1,44 +1,83 @@
-"use client";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
+import React, { useState, useEffect } from 'react';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
-// Define the interface for the product type
-interface IProduct {
-  _id: string;
-  imgSrc: string;
-  fileKey: string;
-  name: string;
-  category: string;
+interface Ad {
+  id: number;
   title: string;
-  price: number;
+  image: string;
+  description: string;
+  cta: string;
 }
 
-const Advertisements = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
+const Advertisements: React.FC = () => {
+  const [ads, setAds] = useState<Ad[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [autoScroll, setAutoScroll] = useState(true);
+
+  // Array of static shop/store advertisement images
+  const randomImages = [
+    '/vercel.svg',
+    '/vercel.svg',
+    '/vercel.svg',
+    '/vercel.svg',
+    '/vercel.svg',
+    '/vercel.svg',
+  ];
 
   useEffect(() => {
-    axios
-      .get("/api/get_ad_products")
-      .then((res) => setProducts(res.data))
-      .catch((error) => console.error("Error fetching ad products:", error));
-  }, []);
+    // Add predefined ads to the state
+    const predefinedAds = randomImages.map((img, index) => ({
+      id: index + 1,
+      title: `Shop ${index + 1}`,
+      image: img,
+      description: `Discover the best deals and offers from Shop ${index + 1}.`,
+      cta: 'Shop Now',
+    }));
+    setAds(predefinedAds);
+
+    // Auto-scroll effect
+    if (autoScroll) {
+      const interval = setInterval(() => {
+        const container = document.querySelector('.advertisements-container');
+        if (container) {
+          container.scrollBy({ left: 1, behavior: 'smooth' });
+        }
+      }, 50);  // Adjust the speed as needed
+
+      return () => clearInterval(interval);
+    }
+  }, [autoScroll]);
+
+  const handleMouseEnter = () => setAutoScroll(false);
+  const handleMouseLeave = () => setAutoScroll(true);
 
   return (
-    <div className="container mt-16 px-4 md:px-8">
-      <h2 className="text-sm font-medium uppercase font-urbanist bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">Advertisements</h2>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8">
-        {products.map((item) => (
-          <ProductCard
-            key={item._id}
-            id={item._id}
-            img={item.imgSrc}
-            category={item.category}
-            price={item.price}
-            title={item.title}
-            isLoading={false}
-          />
-        ))}
+    <div className="bg-black text-white py-8">
+      <div className="container mx-auto">
+        <h3 className="text-2xl font-bold mb-6 text-center">Advertisements</h3>
+        <div
+          className="flex gap-6 advertisements-container overflow-x-auto"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {ads.map((ad) => (
+            <div key={ad.id} className="bg-black text-white rounded-lg shadow-lg overflow-hidden w-72">
+              <img src={ad.image} alt={ad.title} className="w-full h-48 object-cover" />
+              <div className="p-4">
+                <h4 className="text-xl font-semibold mb-2">{ad.title}</h4>
+                <p className="text-gray-400 text-sm">{ad.description}</p>
+                <button className="mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition-all">
+                  {ad.cta}
+                </button>
+              </div>
+            </div>
+          ))}
+          {loading && (
+            <div className="w-full flex justify-center items-center py-6">
+              <AiOutlineLoading3Quarters className="text-2xl animate-spin" />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

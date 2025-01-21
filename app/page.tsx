@@ -20,9 +20,9 @@ export default function Home() {
       <Navbar setShowCart={setShowCart} />
       {showCart && <Cart setShowCart={setShowCart} />}
       {/* <Hero /> */}
-      <Advertisements />
+      {/* <Advertisements /> */}
       <Banners />
-      <NewArrivals />
+      {/* <NewArrivals /> */}
       <TrendingProucts />
       <Footer />
     </main>

@@ -6,13 +6,14 @@ export async function POST(req: NextRequest) {
   try {
     const { email, firstName, lastName, number } = await req.json();
 
+    const useremail = email.toLowerCase();  
     if (!email) {
       return NextResponse.json({ msg: "Email is required." }, { status: 400 });
     }
 
     await connectMongoDB();
 
-    const emailExists = await User.findOne({ email });
+    const emailExists = await User.findOne({ email: useremail });
 
     if (emailExists) {
       return NextResponse.json(
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const data = await User.create({ email, firstName, lastName, number });
+    const data = await User.create({ email: useremail, firstName, lastName, number });
 
     return NextResponse.json(
       { msg: "User successfully created", data },
