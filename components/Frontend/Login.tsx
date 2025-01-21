@@ -144,7 +144,7 @@ export default function LoginUI() {
 
             <Button
               type="submit"
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-primary-foreground hover:bg-primary/90"
             >
               {formType === "login" ? "Sign In" : "Sign Up"}
             </Button>
@@ -159,7 +159,7 @@ export default function LoginUI() {
               onClick={() =>
                 setFormType(formType === "login" ? "signup" : "login")
               }
-              className="text-primary underline"
+              className="text-gradient bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text underline"
             >
               {formType === "login" ? "Sign Up" : "Sign In"}
             </button>

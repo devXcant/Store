@@ -1,5 +1,6 @@
 "use client";
 import Cart from "@/components/Frontend/Cart";
+import Footer from "@/components/Frontend/Footer";
 import LoginUI from "@/components/Frontend/Login";
 // import Login, { LoginUI } from "@/components/Frontend/Login";
 import Navbar from "@/components/Frontend/Navbar";
@@ -12,6 +13,7 @@ const page = () => {
       <Navbar setShowCart={setShowCart} />
       {showCart && <Cart setShowCart={setShowCart} />}
       <LoginUI />
+      <Footer />
     </>
   );
 };

@@ -1,8 +1,9 @@
 import { useAppDispatch } from "@/lib/hook";
-import { addToCart, updateCartQuantity } from "@/redux/features/cart";  // Assuming you have an updateCartQuantity action
+import { addToCart, updateCartQuantity } from "@/redux/features/cart";
 import { makeToast } from "@/utils/helper";
 import React, { useState } from "react";
 import { AiFillStar, AiOutlineShoppingCart, AiOutlineStar } from "react-icons/ai";
+import ProductCardView from "./ProductCardView";
 
 interface propsType {
   id: string;
@@ -11,11 +12,15 @@ interface propsType {
   title: string;
   price: number;
   isLoading: boolean;
+  delivery: string;
+  availability: string;
+  description: string;
 }
 
-const ProductCard = ({ id, img, category, title, price, isLoading }: propsType) => {
+const ProductCard = ({ id, img, category, title, price, isLoading, delivery, availability, description }: propsType) => {
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
@@ -29,8 +34,8 @@ const ProductCard = ({ id, img, category, title, price, isLoading }: propsType) 
     }
   };
 
-
-  const addProductToCart = () => {
+  const addProductToCart = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent modal from opening
     const payload = {
       id,
       img,
@@ -42,91 +47,107 @@ const ProductCard = ({ id, img, category, title, price, isLoading }: propsType) 
     makeToast("Added to cart");
   };
 
-  const updateCartQuantityInStore = () => {
-    const payload = {
-      id,
-      quantity,
-    };
-    dispatch(updateCartQuantity(payload));  
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div
-      className={`${
-        isLoading ? "animate-pulse" : ""
-      } rounded-xl shadow-lg bg-black border font-urbanist transition-all duration-300 mb-10`}
-    >
-      {/* Image Section */}
-      <div className="relative overflow-hidden rounded-t-lg">
-        <img
-          src={isLoading ? "/cartplaceholder.jpg" : img}
-          alt={title}
-          className="w-90% h-[200px] object-cover transition-transform transform hover:scale-105"
-        />
-      </div>
-
-      {/* Product Info Section */}
-      <div className="px-6 py-4 border-t border-grey-100">
-        {/* Category */}
-        <p className="text-sm text-[#00A1AB]">{category}</p>
-
-        {/* Title */}
-        <h2 className="font-semibold text-[#020112] mt-1">
-          {isLoading ? "Loading..." : title}
-        </h2>
-
-        {/* Ratings */}
-        <div className="mt-2 flex items-center text-[#FFB21D]">
-          {isLoading
-            ? Array(4)
-                .fill(0)
-                .map((_, index) => (
-                  <AiFillStar key={index} className="animate-pulse" />
-                ))
-            : Array(4)
-                .fill(0)
-                .map((_, index) => <AiFillStar key={index} />)}
-          <AiOutlineStar />
-          <p className="text-gray-600 text-xs ml-2">
-            {isLoading ? "(Loading...)" : "(3 Reviews)"}
-          </p>
+    <>
+      <div
+        className={`${
+          isLoading ? "animate-pulse" : ""
+        } rounded-xl bg-black border font-urbanist transition-all duration-300 mb-10 hover:cursor-pointer`}
+        onClick={openModal}
+      >
+        {/* Image Section */}
+        <div className="relative overflow-hidden">
+          <img
+            src={isLoading ? "/cartplaceholder.jpg" : img}
+            alt={title}
+            className="w-full h-[200px] object-cover transition-transform transform hover:scale-105"
+          />
         </div>
 
-        {/* Price and Add to Cart Button */}
-        <div className="flex justify-between items-center mt-4">
-          <div className="flex flex-col gap-2 items-between">
+        {/* Product Info Section */}
+        <div className="px-6 py-4 border-t border-grey-100">
+          <p className="text-sm text-[#00A1AB]">{category}</p>
+          <h2 className="font-semibold text-[#020112] mt-1">
+            {isLoading ? "Loading..." : title}
+          </h2>
+          <div className="mt-2 flex items-center text-[#FFB21D]">
+            {Array(4)
+              .fill(0)
+              .map((_, index) => <AiFillStar key={index} />)}
+            <AiOutlineStar />
+            <p className="text-gray-600 text-xs ml-2">(3 Reviews)</p>
+          </div>
+          <div className="flex justify-between items-center mt-4">
             <h2 className="font-medium text-white text-xl">
               {isLoading ? "$..." : `$${price}`}
             </h2>
-            <div className="flex flex-row justify-between gap-2">
+            <div className="flex items-center gap-2">
               <button
-                className="rounded-full w-50"
-                onClick={decreaseQuantity}
+                className="rounded-full w-8 h-8 bg-gray-700 text-white"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent modal from opening
+                  decreaseQuantity();
+                }}
                 disabled={isLoading || quantity <= 1}
               >
                 -
               </button>
-              <span className="flex items-center justify-center w-12">{quantity}</span>
-              <button className="rounded-full w-50" onClick={increaseQuantity} disabled={isLoading}>
+              <span>{quantity}</span>
+              <button
+                className="rounded-full w-8 h-8 bg-gray-700 text-white"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent modal from opening
+                  increaseQuantity();
+                }}
+                disabled={isLoading}
+              >
                 +
               </button>
             </div>
           </div>
-
-          {/* Add to Cart Button */}
-          <div
-            className={`flex gap-2 items-center ${
+          <button
+            className={`mt-4 w-full rounded-md py-2 ${
               isLoading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-purple-600 to-purple-800 text-white cursor-pointer hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 transition-all duration-300"
-            } px-4 py-2 rounded-md`}
-            onClick={!isLoading ? addProductToCart : undefined}
+                : "bg-gradient-to-r from-green-400 to-blue-500 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-green-400 transition-all duration-300"
+            }`}
+            onClick={addProductToCart}
+            disabled={isLoading}
           >
-            <AiOutlineShoppingCart /> {isLoading ? "Loading..." : "Add to Cart"}
-          </div>
+            {isLoading ? "Loading..." : "Add to Cart"}
+          </button>
         </div>
       </div>
-    </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
+          <div className="bg-black rounded-lg w-full md:w-3/5 p-6 relative border border-gray-100">
+            <button
+              onClick={closeModal}
+              className="absolute top-2 right-2 text-gray-700 hover:text-gray-900"
+            >
+              ✕
+            </button>
+            <ProductCardView
+              id={id}
+              img={img}
+              category={category}
+              title={title}
+              price={price}
+              quantity={quantity}
+              delivery="Location determines amount of days to delivery"
+              availability={availability}
+              description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quisquam reprehenderit eaque distinctio libero id recusandae eius modi. Nulla laborum eius pariatur dolor tenetur dolorem enim sapiente aliquid eligendi cumque? Autem?"
+            />
+          </div>
+        </div>
+
+      )}
+    </>
   );
 };
 

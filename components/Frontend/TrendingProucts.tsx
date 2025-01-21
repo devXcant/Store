@@ -50,6 +50,9 @@ const TrendingProducts = () => {
               price={item.price}
               title={item.title}
               isLoading={false}
+              delivery={""}
+              availability={""}
+              description={""}
             />
           ))}
       </div>

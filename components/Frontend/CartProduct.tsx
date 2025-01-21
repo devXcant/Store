@@ -21,7 +21,7 @@ const CartProduct: React.FC<propsType> = ({
   const dispatch = useDispatch();
 
   return (
-    <div className="flex justify-between items-center py-4 border-b border-gray-200">
+    <div className="flex justify-between items-center py-4 border-b border-gray-200 font-urbanist">
       <div className="flex items-center gap-4">
         {/* Product Image */}
         <img
@@ -32,7 +32,7 @@ const CartProduct: React.FC<propsType> = ({
 
         {/* Product Info */}
         <div className="space-y-2">
-          <h3 className="text-lg font-medium text-gray-800">{title}</h3>
+          <h3 className="text-lg font-medium text-white">{title || 'Item'}</h3>
           <p className="text-sm text-gray-600">
             {quantity} x ${price}
           </p>
@@ -41,7 +41,7 @@ const CartProduct: React.FC<propsType> = ({
 
       {/* Remove Icon */}
       <RxCross1
-        className="cursor-pointer text-gray-600 hover:text-red-600 transition-all duration-300"
+        className="cursor-pointer text-gray-600 hover:text-purple-600 transition-all duration-300"
         onClick={() => dispatch(removeFromCart(id))}
       />
     </div>

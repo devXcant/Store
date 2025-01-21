@@ -2,6 +2,7 @@
 import Advertisements from "@/components/Frontend/Advertisements";
 import Banners from "@/components/Frontend/Banner";
 import Cart from "@/components/Frontend/Cart";
+import Footer from "@/components/Frontend/Footer";
 import Hero from "@/components/Frontend/Hero";
 import Navbar from "@/components/Frontend/Navbar";
 import NewArrivals from "@/components/Frontend/NewArrivals";
@@ -23,6 +24,7 @@ export default function Home() {
       <Banners />
       <NewArrivals />
       <TrendingProucts />
+      <Footer />
     </main>
   );
 }
