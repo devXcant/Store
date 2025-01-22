@@ -14,7 +14,7 @@ export default function ImagesUI(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const access_Key = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY as string
   useEffect(() => {
-    
+
 
       console.log(access_Key)
 
@@ -40,7 +40,7 @@ export default function ImagesUI(): JSX.Element {
     }
 
     fetchImages();
-  }, [access_Key]);
+  }, []);
 
   return (
     <div className="p-4">

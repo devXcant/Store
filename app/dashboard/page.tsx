@@ -19,7 +19,7 @@ const page = () => {
       <Navbar setShowCart={setShowCart} />
       {showCart && <Cart setShowCart={setShowCart} />}
       <Banners />
-      <ImagesUI />
+      {/* <ImagesUI /> */}
       <TrendingProucts />
       <Footer />
     </main>

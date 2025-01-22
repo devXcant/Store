@@ -1,97 +1,123 @@
-"use client";
-import Popup from "@/components/Admin/Popup";
-import ProductRow from "@/components/Admin/ProductRow";
+"use client"
+import { useState, useEffect } from "react";
 import { useAppDispatch } from "@/lib/hook";
 import { setLoading } from "@/redux/features/loadingReducer";
+import ProductRow from "@/components/Admin/ProductRow";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 
-export interface IProduct {
-  _id: string;
+interface IProduct {
+  name: string;
+  price: number;
+  category: string;
   imgSrc: string;
   fileKey: string;
-  name: string;
-  price: string;
-  category: string;
+}
+
+interface ImageType {
+  id: string;
+  urls: {
+    small: string;
+  };
 }
 
 const Dashboard = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [openPopup, setOpenPopup] = useState(false);
+  const [categoryImages, setCategoryImages] = useState<Record<string, string[]>>({});
   const [updateTable, setUpdateTable] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(setLoading(true));
+
+    // Fetch existing products
     axios
-      .get("http://localhost:3000/api/get_products")
+      .get("http://localhost:3001/api/get_products")
       .then((res) => setProducts(res.data))
       .catch((err) => console.error(err))
       .finally(() => dispatch(setLoading(false)));
   }, [updateTable]);
 
-  async function postProducts() {
-    const products = [
-      {
-        srNo: 1,
-        category: "Electronics",
-        fileKey: "fileKey1",
-        name: "Smartphone",
-        picture: "smartphone.jpg",
-        price: 699.99,
-      },
-      {
-        srNo: 2,
-        category: "Clothing",
-        fileKey: "fileKey2",
-        name: "T-Shirt",
-        picture: "tshirt.jpg",
-        price: 19.99,
-      },
-      {
-        srNo: 3,
-        category: "Books",
-        fileKey: "fileKey3",
-        name: "Programming Book",
-        picture: "book.jpg",
-        price: 29.99,
-      },
-      {
-        srNo: 4,
-        category: "Toys",
-        fileKey: "fileKey4",
-        name: "Action Figure",
-        picture: "figure.jpg",
-        price: 14.99,
-      },
-      {
-        srNo: 5,
-        category: "Home Appliances",
-        fileKey: "fileKey5",
-        name: "Vacuum Cleaner",
-        picture: "vacuum.jpg",
-        price: 149.99,
-      },
-    ];
+  useEffect(() => {
+    // Fetch Unsplash images for each category
+    async function fetchImages() {
+      const categories = ["Electronics", "Clothing", "Books", "Toys", "Home Appliances"];
+      const fetchedImages: Record<string, string[]> = {};
 
-    try {
-      const response = await fetch("http://localhost:3000/api/post_product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(products),
-      });
+      for (const category of categories) {
+        try {
+          const response = await fetch(
+            `https://api.unsplash.com/search/photos?query=${category}&per_page=5&client_id=L204sknrX9m9qW--qR-E3Kxl8t8YJ19LctCCDYQ3y04`
+          );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+          if (response.ok) {
+            const data = await response.json();
+            fetchedImages[category] = data.results.map((image: ImageType) => image.urls.small);
+          } else {
+            console.error(`Failed to fetch images for category: ${category}`);
+          }
+        } catch (error) {
+          console.error(`Error fetching images for category ${category}:`, error);
+        }
       }
 
-      const result = await response.json();
-      console.log("Response:", result);
-    } catch (error) {
-      console.error("Error posting products:", error);
+      setCategoryImages(fetchedImages);
+    }
+
+    fetchImages();
+  }, []);
+
+  async function postProducts() {
+    const categories = [
+      { category: "Electronics", basePrice: 500 },
+      { category: "Clothing", basePrice: 20 },
+      { category: "Books", basePrice: 15 },
+      { category: "Toys", basePrice: 10 },
+      { category: "Home Appliances", basePrice: 100 },
+    ];
+
+    const productsToPost: IProduct[] = [];
+
+    // Create up to 5 products for each category
+    categories.forEach(({ category, basePrice }) => {
+      const images = categoryImages[category] || [];
+      for (let i = 0; i < Math.min(5, images.length); i++) {
+        // Ensure each product has a valid image URL
+        if (images[i]) {
+          productsToPost.push({
+            name: `${category} Product ${i + 1}`,
+            price: basePrice + i * 10,
+            category,
+            imgSrc: images[i], // Directly assign image URLs fetched from Unsplash
+            fileKey: `fileKey-${category}-${i}`,
+          });
+        }
+      }
+    });
+
+    if (productsToPost.length > 0) {
+      try {
+        const response = await fetch("/api/post_product", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productsToPost),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Response:", result);
+        setUpdateTable((prev) => !prev); // Refresh the table
+      } catch (error) {
+        console.error("Error posting products:", error);
+      }
+    } else {
+      console.log("No valid products to post.");
     }
   }
 
@@ -100,7 +126,7 @@ const Dashboard = () => {
       <h2 className="text-3xl font-semibold text-white mb-6">All Products</h2>
       <button
         onClick={postProducts}
-        className=" bg-gradient-to-r from-green-500 to-green-700 text-white py-2 px-6 rounded-lg mb-4 hover:bg-green-700 transition-all"
+        className="bg-gradient-to-r from-green-500 to-green-700 text-white py-2 px-6 rounded-lg mb-4 hover:bg-green-700 transition-all"
       >
         Post Products
       </button>
@@ -119,20 +145,17 @@ const Dashboard = () => {
           <tbody>
             {products.map((product, index) => (
               <ProductRow
-                key={product._id}
+                key={index}
                 srNo={index + 1}
-                setOpenPopup={setOpenPopup}
                 setUpdateTable={setUpdateTable}
                 product={product}
+  setOpenPopup={setOpenPopup}
+
               />
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* {openPopup && (
-        <Popup setOpenPopup={setOpenPopup} setUpdateTable={setUpdateTable} />
-      )} */}
     </div>
   );
 };
