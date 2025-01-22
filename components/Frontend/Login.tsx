@@ -33,9 +33,13 @@ export default function LoginUI() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const endpoint =
+      formType === "login"
+        ? "http://localhost:3001/api/login_user"
+        : "http://localhost:3001/api/create_user";
 
     try {
-      const response = await fetch("http://localhost:3002/api/login_user", {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,39 +50,16 @@ export default function LoginUI() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Login successful", data);
-        router.push(`/`);
+        console.log(`${formType === "login" ? "Login" : "Signup"} successful`, data);
+        const redirectPath = formType === "login" ? "/dashboard" : "/";
+        router.push(redirectPath);
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("user", data.email);
       } else {
-        console.error("Login failed:", data.message || "An error occurred");
-      }
-    } catch (error) {
-      console.error("An unexpected error occurred:", error);
-    }
-  };
-
-  const handleSubmit2 = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:3002/api/create_user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Login successful", data);
-        router.push(`/`);
-        localStorage.setItem("authToken", data.token);
-        localStorage.setItem("user2", data.email);
-      } else {
-        console.error("Login failed:", data.message || "An error occurred");
+        console.error(
+          `${formType === "login" ? "Login" : "Signup"} failed:`,
+          data.message || "An error occurred"
+        );
       }
     } catch (error) {
       console.error("An unexpected error occurred:", error);
@@ -108,7 +89,7 @@ export default function LoginUI() {
             Continue with Google
           </Button>
 
-          <form onSubmit={handleSubmit2} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="email" className="text-sm">
                 Email

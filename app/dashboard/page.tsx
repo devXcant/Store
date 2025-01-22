@@ -8,20 +8,20 @@ import LoginUI from "@/components/Frontend/Login";
 import Navbar from "@/components/Frontend/Navbar";
 import NewArrivals from "@/components/Frontend/NewArrivals";
 import TrendingProucts from "@/components/Frontend/TrendingProucts";
-
 import { useState } from "react";
 
-
-
-export default function Home() {
-
+const page = () => {
   const [showCart, setShowCart] = useState(false);
+
   return (
     <main>
       <Navbar setShowCart={setShowCart} />
       {showCart && <Cart setShowCart={setShowCart} />}
-      <LoginUI />
+      <Banners />
+      <TrendingProucts />
       <Footer />
     </main>
   );
-}
+};
+
+export default page;
