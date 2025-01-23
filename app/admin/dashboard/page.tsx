@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { useAppDispatch } from "@/lib/hook";
 import { setLoading } from "@/redux/features/loadingReducer";
@@ -22,7 +22,9 @@ interface ImageType {
 
 const Dashboard = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [categoryImages, setCategoryImages] = useState<Record<string, string[]>>({});
+  const [categoryImages, setCategoryImages] = useState<
+    Record<string, string[]>
+  >({});
   const [updateTable, setUpdateTable] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
 
@@ -42,7 +44,13 @@ const Dashboard = () => {
   useEffect(() => {
     // Fetch Unsplash images for each category
     async function fetchImages() {
-      const categories = ["Electronics", "Clothing", "Books", "Toys", "Home Appliances"];
+      const categories = [
+        "Electronics",
+        "Clothing",
+        "Books",
+        "Toys",
+        "Home Appliances",
+      ];
       const fetchedImages: Record<string, string[]> = {};
 
       for (const category of categories) {
@@ -53,12 +61,17 @@ const Dashboard = () => {
 
           if (response.ok) {
             const data = await response.json();
-            fetchedImages[category] = data.results.map((image: ImageType) => image.urls.small);
+            fetchedImages[category] = data.results.map(
+              (image: ImageType) => image.urls.small
+            );
           } else {
             console.error(`Failed to fetch images for category: ${category}`);
           }
         } catch (error) {
-          console.error(`Error fetching images for category ${category}:`, error);
+          console.error(
+            `Error fetching images for category ${category}:`,
+            error
+          );
         }
       }
 
@@ -149,8 +162,7 @@ const Dashboard = () => {
                 srNo={index + 1}
                 setUpdateTable={setUpdateTable}
                 product={product}
-  setOpenPopup={setOpenPopup}
-
+                setOpenPopup={setOpenPopup}
               />
             ))}
           </tbody>
