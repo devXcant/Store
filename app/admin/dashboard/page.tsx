@@ -22,9 +22,7 @@ interface ImageType {
 
 const Dashboard = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [categoryImages, setCategoryImages] = useState<
-    Record<string, string[]>
-  >({});
+  const [categoryImages, setCategoryImages] = useState<Record<string, string[]>>({});
   const [updateTable, setUpdateTable] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
 
@@ -35,47 +33,40 @@ const Dashboard = () => {
 
     // Fetch existing products
     axios
-      .get("http://localhost:3001/api/get_products")
+      .get("/api/get_products")
       .then((res) => setProducts(res.data))
-      .catch((err) => console.error(err))
+      .catch((err) => console.error("Error fetching products:", err))
       .finally(() => dispatch(setLoading(false)));
   }, [updateTable]);
 
   useEffect(() => {
     // Fetch Unsplash images for each category
     async function fetchImages() {
-      const categories = [
-        "Electronics",
-        "Clothing",
-        "Books",
-        "Toys",
-        "Home Appliances",
-      ];
+      const categories = ["Electronics", "Clothing", "Books", "Toys", "Home Appliances"];
       const fetchedImages: Record<string, string[]> = {};
 
-      for (const category of categories) {
-        try {
-          const response = await fetch(
-            `https://api.unsplash.com/search/photos?query=${category}&per_page=5&client_id=L204sknrX9m9qW--qR-E3Kxl8t8YJ19LctCCDYQ3y04`
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            fetchedImages[category] = data.results.map(
-              (image: ImageType) => image.urls.small
+      try {
+        await Promise.all(
+          categories.map(async (category) => {
+            const response = await fetch(
+              `https://api.unsplash.com/search/photos?query=${category}&per_page=5&client_id=L204sknrX9m9qW--qR-E3Kxl8t8YJ19LctCCDYQ3y04`
             );
-          } else {
-            console.error(`Failed to fetch images for category: ${category}`);
-          }
-        } catch (error) {
-          console.error(
-            `Error fetching images for category ${category}:`,
-            error
-          );
-        }
-      }
 
-      setCategoryImages(fetchedImages);
+            if (response.ok) {
+              const data = await response.json();
+              fetchedImages[category] = data.results.map(
+                (image: ImageType) => image.urls.small
+              );
+            } else {
+              console.error(`Failed to fetch images for category: ${category}`);
+            }
+          })
+        );
+
+        setCategoryImages(fetchedImages);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
     }
 
     fetchImages();
@@ -92,17 +83,15 @@ const Dashboard = () => {
 
     const productsToPost: IProduct[] = [];
 
-    // Create up to 5 products for each category
     categories.forEach(({ category, basePrice }) => {
       const images = categoryImages[category] || [];
       for (let i = 0; i < Math.min(5, images.length); i++) {
-        // Ensure each product has a valid image URL
         if (images[i]) {
           productsToPost.push({
             name: `${category} Product ${i + 1}`,
             price: basePrice + i * 10,
             category,
-            imgSrc: images[i], // Directly assign image URLs fetched from Unsplash
+            imgSrc: images[i],
             fileKey: `fileKey-${category}-${i}`,
           });
         }
@@ -124,7 +113,7 @@ const Dashboard = () => {
         }
 
         const result = await response.json();
-        console.log("Response:", result);
+        console.log("Products posted successfully:", result);
         setUpdateTable((prev) => !prev); // Refresh the table
       } catch (error) {
         console.error("Error posting products:", error);
