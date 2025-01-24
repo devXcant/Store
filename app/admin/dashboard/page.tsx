@@ -22,7 +22,9 @@ interface ImageType {
 
 const Dashboard = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [categoryImages, setCategoryImages] = useState<Record<string, string[]>>({});
+  const [categoryImages, setCategoryImages] = useState<
+    Record<string, string[]>
+  >({});
   const [updateTable, setUpdateTable] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
 
@@ -42,7 +44,13 @@ const Dashboard = () => {
   useEffect(() => {
     // Fetch Unsplash images for each category
     async function fetchImages() {
-      const categories = ["Electronics", "Clothing", "Books", "Toys", "Home Appliances"];
+      const categories = [
+        "Electronics",
+        "Clothing",
+        "Books",
+        "Toys",
+        "Home Appliances",
+      ];
       const fetchedImages: Record<string, string[]> = {};
 
       try {
@@ -82,6 +90,7 @@ const Dashboard = () => {
     ];
 
     const productsToPost: IProduct[] = [];
+    const placeholderImage = "/cartplaceholder.png";
 
     categories.forEach(({ category, basePrice }) => {
       const images = categoryImages[category] || [];
@@ -91,7 +100,7 @@ const Dashboard = () => {
             name: `${category} Product ${i + 1}`,
             price: basePrice + i * 10,
             category,
-            imgSrc: images[i],
+            imgSrc: images[i] || placeholderImage,
             fileKey: `fileKey-${category}-${i}`,
           });
         }

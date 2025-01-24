@@ -35,8 +35,8 @@ export default function LoginUI() {
     e.preventDefault();
     const endpoint =
       formType === "login"
-        ? "http://localhost:3001/api/login_user"
-        : "http://localhost:3001/api/create_user";
+        ? "/api/login_user"
+        : "/api/create_user";
 
     try {
       const response = await fetch(endpoint, {
