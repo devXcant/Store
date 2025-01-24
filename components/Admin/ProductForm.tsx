@@ -32,7 +32,7 @@ const ProductForm = () => {
     dispatch(setLoading(true));
 
     axios
-      .post("http://localhost:3000/api/add_products", payload)
+      .post("/api/add_products", payload)
       .then((res) => {
         makeToast("Product added successfully");
         setPayload({

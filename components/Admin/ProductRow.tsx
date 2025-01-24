@@ -9,6 +9,8 @@ import React, { Dispatch, SetStateAction } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
+
+
 interface PropsType {
   srNo: number;
   setOpenPopup: Dispatch<SetStateAction<boolean>>;
@@ -37,7 +39,7 @@ const ProductRow = ({
       .delete("/api/uploadthing", { data: payload })
       .then(() => {
         axios
-          .delete(`http://localhost:3000/api/delete_product/${product._id}`)
+          .delete(`/api/delete_product/${product._id}`)
           .then(() => {
             makeToast("Product deleted successfully");
             setUpdateTable((prevState) => !prevState);

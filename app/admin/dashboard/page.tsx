@@ -5,7 +5,8 @@ import { setLoading } from "@/redux/features/loadingReducer";
 import ProductRow from "@/components/Admin/ProductRow";
 import axios from "axios";
 
-interface IProduct {
+export interface IProduct {
+  _id: any;
   name: string;
   price: number;
   category: string;

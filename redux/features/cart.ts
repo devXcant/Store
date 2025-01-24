@@ -21,7 +21,7 @@ export const fetchCart = createAsyncThunk<
   { rejectValue: string }
 >("store/cart", async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get("http://localhost:3000/api/products", {
+    const response = await axios.get("/api/products", {
       headers: {
         "Content-Type": "application/json",
       },
