@@ -28,7 +28,7 @@ const Popup = ({ setOpenPopup, setUpdateTable }: PropTypes) => {
 
   const [inputData, setInputData] = useState({
     name: productData.name,
-    price: productData.price,
+    price: Number(productData.price), // Ensure price starts as a number
     category: productData.category,
   });
 
@@ -38,7 +38,7 @@ const Popup = ({ setOpenPopup, setUpdateTable }: PropTypes) => {
 
     axios
       .put(`/api/edit_product/${productData._id}`, inputData)
-      .then((res) => {
+      .then(() => {
         makeToast("Products Updated Successfully");
         setUpdateTable((prevState) => !prevState);
       })
@@ -99,10 +99,14 @@ const Popup = ({ setOpenPopup, setUpdateTable }: PropTypes) => {
                 id="price"
                 value={inputData.price}
                 onChange={(e) =>
-                  setInputData({ ...inputData, price: e.target.value })
+                  setInputData({
+                    ...inputData,
+                    price: Number(e.target.value), // Convert value to number
+                  })
                 }
                 required
                 className="bg-muted text-foreground"
+                type="number" // Ensure input type is number
               />
             </div>
           </CardContent>

@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 
-const PaymentSuccess = () => {
+const PaymentSuccessWrapper = () => {
   const searchParams = useSearchParams();
   const amount = searchParams.get("amount");
 
@@ -44,6 +44,14 @@ const PaymentSuccess = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const PaymentSuccess = () => {
+  return (
+    <Suspense fallback={<div className="text-white text-center mt-8">Loading...</div>}>
+      <PaymentSuccessWrapper />
+    </Suspense>
   );
 };
 
