@@ -5,7 +5,7 @@ import { setLoading } from "@/redux/features/loadingReducer";
 import ProductRow from "@/components/Admin/ProductRow";
 import axios from "axios";
 
-export interface IProduct {
+ interface IProduct {
   _id: any;
   name: string;
   price: number;
@@ -103,6 +103,7 @@ const Dashboard = () => {
             category,
             imgSrc: images[i] || placeholderImage,
             fileKey: `fileKey-${category}-${i}`,
+            _id: undefined
           });
         }
       }

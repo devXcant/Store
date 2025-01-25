@@ -1,4 +1,4 @@
-import { IProduct } from "@/app/admin/dashboard/page";
+// import { IProduct } from "@/app/admin/dashboard/page";
 import { useAppDispatch } from "@/lib/hook";
 import { setLoading } from "@/redux/features/loadingReducer";
 import { setProduct } from "@/redux/features/product";
@@ -9,7 +9,14 @@ import React, { Dispatch, SetStateAction } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-
+interface IProduct {
+  _id: any;
+  name: string;
+  price: number;
+  category: string;
+  imgSrc: string;
+  fileKey: string;
+}
 
 interface PropsType {
   srNo: number;
