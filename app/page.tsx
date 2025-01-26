@@ -20,7 +20,9 @@ export default function Home() {
     <main>
       <Navbar setShowCart={setShowCart} />
       {showCart && <Cart setShowCart={setShowCart} />}
-      <LoginUI />
+     
+      <Banners />
+      <TrendingProucts />
       <Footer />
     </main>
   );

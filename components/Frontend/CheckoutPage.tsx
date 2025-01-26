@@ -63,10 +63,10 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
         {clientSecret && <PaymentElement />}
         {errorMessage && <div>{errorMessage}</div>}
         <button
-          className="text-white w-full p-5 bg-black mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse"
+          className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-green-400 transition-all duration-300 w-full h-[40px] my-10 disabled:opacity-50 disabled:animate-pulse"
           disabled={!stripe || loading}
         >
-          {!loading ? `Pay ${amount}` : `Processing...`}{" "}
+          {!loading ? `Pay $${amount}` : `Processing...`}{" "}
         </button>
       </form>
     </div>

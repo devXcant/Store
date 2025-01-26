@@ -16,7 +16,7 @@ const initialState: IProduct = {
     imgSrc: "",
     fileKey: "",
     name: "",
-    price: 0,
+    price: "",
     category: "",
 
 }
